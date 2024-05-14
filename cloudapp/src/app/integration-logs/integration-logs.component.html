@@ -1,0 +1,32 @@
+<app-topmenu>
+    <div buttons>
+        <!-- <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button> -->
+    </div>
+</app-topmenu>
+<div class="loading-shade" *ngIf="running">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+</div>
+<section class="settings-section">
+    <form>
+        <mat-form-field>
+            <mat-label>Select Integration</mat-label>
+            <mat-select value="CRS" #identifierType>
+              <mat-option value="CRS">CRS</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div class="cloudapp-actions">
+        <button mat-flat-button type="button" color="primary" (click)="search(identifierType.value)">Get Logs</button>
+    </div> 
+</section>
+<mat-card *ngFor="let item of record">
+    <mat-card-header>
+        <mat-card-title>{{item.message}}</mat-card-title>
+        <mat-card-subtitle>{{item.timestamp}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p *ngIf="item.data.reqtype === 'title'">User {{item.data.user_id}} made a title request for {{item.data.mmsid}}.</p>
+        <p *ngIf="item.data.reqtype === 'item'">User {{item.data.user_id}} made a item request for {{item.data.item_id}}.</p>
+        <!-- <pre>{{item | json}}</pre> -->
+    </mat-card-content>
+</mat-card>

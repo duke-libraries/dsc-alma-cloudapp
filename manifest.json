@@ -2,5 +2,17 @@
    "id": "duke-dsc",
    "title": "Duke DSC",
    "subtitle": "Data Service Center",
-   "author": "Jeff Fleming"
+   "author": "Jeff Fleming",
+   "icon": {
+      "type": "font",
+      "value": "fa fa-database"
+   },
+   "pages": {
+      "config": "/#/configuration"
+   },
+   "contentSecurity": {
+      "connectSrc": [
+         "https://w4fu917y63.execute-api.us-east-1.amazonaws.com"
+      ]
+   }
 }

@@ -4,6 +4,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CloudAppRestService, CloudAppEventsService, Request, HttpMethod, 
   Entity, RestErrorResponse, AlertService } from '@exlibris/exl-cloudapp-angular-lib';
 import { MatRadioChange } from '@angular/material/radio';
+import { AppService } from '../app.service';
+import { menu } from './main-menu';
 
 @Component({
   selector: 'app-main',
@@ -11,7 +13,8 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit, OnDestroy {
-
+  isAdmin = false;
+  menu = menu;
   loading = false;
   selectedEntity: Entity;
   apiResult: any;
@@ -22,10 +25,14 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private restService: CloudAppRestService,
     private eventsService: CloudAppEventsService,
-    private alert: AlertService 
+    private alert: AlertService,
+    private appService: AppService,
+
   ) { }
 
   ngOnInit() {
+    this.appService.setTitle('');
+    this.eventsService.getInitData().subscribe(data=>this.isAdmin = data.user.isAdmin)
   }
 
   ngOnDestroy(): void {

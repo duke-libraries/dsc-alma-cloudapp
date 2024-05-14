@@ -1,0 +1,15 @@
+<app-topmenu>
+    <div buttons>
+        <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button>
+    </div>
+</app-topmenu>
+<div class="loading-shade" *ngIf="saving">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+</div>
+<form [formGroup]="form">
+    <section class="config-section">
+        <mat-form-field>
+            <input matInput placeholder="DSC api url" formControlName="apiUrl">
+        </mat-form-field>
+    </section>
+</form>

@@ -3,7 +3,13 @@
     *ngIf="entities.length > 0; then entitylist; else noentities"
   ></ng-container>
   <ng-template #noentities>
-    <h1>Welcome!</h1>
+    <section>
+      <p>Select Data</p>
+      <eca-menu>
+        <eca-menu-item *ngFor="let item of menu" [title]="item.title" [routerLink]="item.link" [icon]="item.icon">{{item.text}}</eca-menu-item>
+      </eca-menu>
+    </section>
+    <!-- <h1>Welcome!</h1>
     <p>Use this sample app to get you started. The app includes the following:</p>
     <ul>
       <li>Listens on the <code>entities$</code> Observable</li>
@@ -12,7 +18,7 @@
       <li>Refreshes the page in Alma</li>
     </ul>
     <p>Use these building blocks to be on your way to developing your own Cloud App.</p>
-    <div class="highlight">Navigate to a page in Alma to view a list of entities.</div>
+    <div class="highlight">Navigate to a page in Alma to view a list of entities.</div> -->
   </ng-template>
 
   <ng-template #entitylist>
