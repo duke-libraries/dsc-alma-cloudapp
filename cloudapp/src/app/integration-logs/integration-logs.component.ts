@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class IntegrationLogsComponent implements OnInit {
   running = false;
   record: any;
-  apiUrl: string;
+  apiUrl!: string;
 
   constructor(
     private appService: AppService,

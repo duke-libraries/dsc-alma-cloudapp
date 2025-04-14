@@ -13,7 +13,7 @@ import { ErrorMessages } from '../static/error.component';
   styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  form: FormGroup;
+  form!: FormGroup;
   saving = false;
 
   constructor(

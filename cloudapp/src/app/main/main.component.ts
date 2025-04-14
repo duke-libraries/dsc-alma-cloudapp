@@ -1,11 +1,12 @@
 import { Observable  } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, tap, map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CloudAppRestService, CloudAppEventsService, Request, HttpMethod, 
-  Entity, RestErrorResponse, AlertService } from '@exlibris/exl-cloudapp-angular-lib';
+  Entity, RestErrorResponse, AlertService, CloudAppConfigService } from '@exlibris/exl-cloudapp-angular-lib';
 import { MatRadioChange } from '@angular/material/radio';
 import { AppService } from '../app.service';
 import { menu } from './main-menu';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -16,8 +17,10 @@ export class MainComponent implements OnInit, OnDestroy {
   isAdmin = false;
   menu = menu;
   loading = false;
-  selectedEntity: Entity;
+  selectedEntity!: Entity;
   apiResult: any;
+  record: any;
+  apiUrl!: string;
 
   entities$: Observable<Entity[]> = this.eventsService.entities$
   .pipe(tap(() => this.clear()))
@@ -27,12 +30,21 @@ export class MainComponent implements OnInit, OnDestroy {
     private eventsService: CloudAppEventsService,
     private alert: AlertService,
     private appService: AppService,
-
+    private http: HttpClient,
+    private configService: CloudAppConfigService,
   ) { }
 
   ngOnInit() {
     this.appService.setTitle('');
     this.eventsService.getInitData().subscribe(data=>this.isAdmin = data.user.isAdmin)
+    this.load();
+  }
+
+  load() {
+    console.log('load');
+    this.configService.get().subscribe( config => {
+      this.apiUrl = config.apiUrl;
+    });
   }
 
   ngOnDestroy(): void {
@@ -40,13 +52,34 @@ export class MainComponent implements OnInit, OnDestroy {
 
   entitySelected(event: MatRadioChange) {
     const value = event.value as Entity;
+    console.log(value);
     this.loading = true;
-    this.restService.call<any>(value.link)
-    .pipe(finalize(()=>this.loading=false))
-    .subscribe(
-      result => this.apiResult = result,
-      error => this.alert.error('Failed to retrieve entity: ' + error.message)
-    );
+    if (value.type === 'ITEM') {
+      const barcode = value.description;
+      const itmHistUrl = (barcode: string) => `${this.apiUrl}/item-history/${barcode}`;
+      this.record = null;
+
+      this.http.get<any>(itmHistUrl(barcode))
+        .pipe(
+          map(res => {
+            console.log(res);
+            return res
+          }), 
+          finalize(() => this.loading = false)
+        )
+      //   .subscribe({
+      //     next: resp => this.record = resp,
+      //     error: e => this.alert.error(e.message)
+      //   });
+      this.loading=false;   
+    } else {
+      this.restService.call<any>(value.link)
+      .pipe(finalize(()=>this.loading=false))
+      .subscribe(
+        result => this.apiResult = result,
+        error => this.alert.error('Failed to retrieve entity: ' + error.message)
+      );
+    }
   }
 
   clear() {

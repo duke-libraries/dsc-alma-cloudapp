@@ -1,6 +1,6 @@
 <app-topmenu>
     <div buttons>
-        <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button>
+        <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form.dirty)">Save</button>
     </div>
 </app-topmenu>
 <div class="loading-shade" *ngIf="saving">

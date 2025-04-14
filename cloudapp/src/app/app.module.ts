@@ -34,7 +34,7 @@ import { TopmenuComponent } from './topmenu/topmenu.component';
     MenuModule
   ],
   providers: [
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'standard' } },
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
   ],
   bootstrap: [AppComponent]
 })
