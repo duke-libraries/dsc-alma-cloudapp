@@ -1,0 +1,8 @@
+{
+   "env": "https://na05.alma.exlibrisgroup.com/institution/01DUKE_INST",
+   "port": 4200,
+   "title": "DSC-Alma_CloudApp",
+   "subtitle": "Data Service Center Alma CloudApp",
+   "author": "Jeff Fleming",
+   "name": "dsc-alma-cloud-app"
+}

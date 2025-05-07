@@ -5,5 +5,11 @@ export const menu = [
       icon: 'uxf-icon uxf-list',
       link: 'integrationlogs'
     },
+    {
+      title: 'Item History',
+      text:  'Item history from Aleph',
+      icon: 'uxf-icon uxf-list',
+      link: 'itemhistory'
+    },
 ]
   

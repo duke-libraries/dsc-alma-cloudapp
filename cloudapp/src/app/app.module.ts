@@ -10,8 +10,15 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MainComponent } from './main/main.component';
 import { IntegrationLogsComponent } from './integration-logs/integration-logs.component';
+import { ItemHistoryComponent } from './item-history/item-history.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { TopmenuComponent } from './topmenu/topmenu.component';
+import Material from '@primeng/themes/material';
+import { providePrimeNG } from 'primeng/config';
+import { PopoverModule } from 'primeng/popover';
+import { ButtonModule } from 'primeng/button';
+import { DrawerModule } from 'primeng/drawer';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +26,8 @@ import { TopmenuComponent } from './topmenu/topmenu.component';
     MainComponent,
     IntegrationLogsComponent,
     ConfigurationComponent,
-    TopmenuComponent
+    TopmenuComponent,
+    ItemHistoryComponent,
   ],
   imports: [
     MaterialModule,
@@ -31,10 +39,18 @@ import { TopmenuComponent } from './topmenu/topmenu.component';
     FormsModule,
     ReactiveFormsModule,     
     CloudAppTranslateModule.forRoot(),
-    MenuModule
+    MenuModule,
+    PopoverModule,
+    ButtonModule,
+    DrawerModule
   ],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
+    providePrimeNG({
+      theme: {
+          preset: Material
+      }
+  })
   ],
   bootstrap: [AppComponent]
 })

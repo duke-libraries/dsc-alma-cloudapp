@@ -28,7 +28,7 @@
         [disabled]="!apiResult || loading">Update
       </button> -->
     </div>
-    <h1>Items</h1>
+    <h1>Entities</h1>
     <!-- <mat-card [style.display]="apiResult ? '' : 'none'">
       <mat-card-header>
         <mat-card-title>API Result</mat-card-title>
@@ -37,17 +37,42 @@
         <textarea #apiResultArea [value]="apiResult | json"></textarea>
       </mat-card-content>
     </mat-card> -->
-    <div *ngIf="selectedEntity; else elseBlock">
-      <mat-card [style.display]="selectedEntity ? '' : 'none'">
-        <mat-card-header>
-          <mat-card-title>Selected Entity</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <pre>{{selectedEntity | json}}</pre>
-        </mat-card-content>
-      </mat-card>
+    <div *ngIf="selectedEntity; else unSelEntBlock">
+      <div *ngIf="selectedEntity.type === 'ITEM'; else notItmBlock">
+        <div *ngIf="histRecord; else histBtnBlock">
+          <div *ngIf="searchHistType === 'bc'">
+            <button mat-flat-button type="button" color="primary" (click)="searchHistory('id', histRecord[0].itemId)">Get by item id</button>
+          </div>
+          <mat-card *ngFor="let item of histRecord">
+            <mat-card-header>
+                <mat-card-title>{{item.histReasonType}}: {{item.histReason}}</mat-card-title>
+                <mat-card-subtitle *ngIf="searchHistType === 'id'">{{item.barcode}}</mat-card-subtitle>
+                <mat-card-subtitle>{{item.histDateTime}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p-button (click)="op.toggle($event)" label="Details" />
+              <p-popover #op>
+                <pre>{{item | json}}</pre>
+              </p-popover>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <ng-template #histBtnBlock>
+          <button mat-flat-button type="button" color="primary" (click)="searchHistory('bc', selectedEntity.description)">Get Item History</button>
+        </ng-template>
+      </div>
+      <ng-template #notItmBlock>
+        <mat-card [style.display]="selectedEntity ? '' : 'none'">
+          <mat-card-header>
+            <mat-card-title>Selected Entity</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+              <pre>{{selectedEntity | json}}</pre>
+          </mat-card-content>
+        </mat-card>
+      </ng-template>
     </div>
-    <ng-template #elseBlock>
+    <ng-template #unSelEntBlock>
       <label id="entities-radio-group-label">Select an entity:</label>
       <mat-radio-group
         aria-labelledby="entities-radio-group-label"

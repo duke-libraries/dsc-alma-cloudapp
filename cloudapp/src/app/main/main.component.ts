@@ -1,6 +1,6 @@
 import { Observable  } from 'rxjs';
 import { finalize, tap, map } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { CloudAppRestService, CloudAppEventsService, Request, HttpMethod, 
   Entity, RestErrorResponse, AlertService, CloudAppConfigService } from '@exlibris/exl-cloudapp-angular-lib';
 import { MatRadioChange } from '@angular/material/radio';
@@ -8,10 +8,12 @@ import { AppService } from '../app.service';
 import { menu } from './main-menu';
 import { HttpClient } from '@angular/common/http';
 
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  // imports: [ButtonDirective, PopoverDirective]
 })
 export class MainComponent implements OnInit, OnDestroy {
   isAdmin = false;
@@ -19,8 +21,10 @@ export class MainComponent implements OnInit, OnDestroy {
   loading = false;
   selectedEntity!: Entity;
   apiResult: any;
-  record: any;
+  histRecord: any;
   apiUrl!: string;
+  running = false;
+  searchHistType: string;
 
   entities$: Observable<Entity[]> = this.eventsService.entities$
   .pipe(tap(() => this.clear()))
@@ -57,7 +61,7 @@ export class MainComponent implements OnInit, OnDestroy {
     if (value.type === 'ITEM') {
       const barcode = value.description;
       const itmHistUrl = (barcode: string) => `${this.apiUrl}/item-history/${barcode}`;
-      this.record = null;
+      this.histRecord = null;
 
       this.http.get<any>(itmHistUrl(barcode))
         .pipe(
@@ -111,6 +115,27 @@ export class MainComponent implements OnInit, OnDestroy {
         console.error(e);
       }
     });    
+  }
+
+  // type barcode => bc, itemId => id
+  searchHistory(idType: string, id: string) {
+    const itmHistUrl = (idType: string, id: string) => `${this.apiUrl}/item-history/${idType}/${id}`;
+    this.running = true;
+    this.histRecord = null;
+    this.searchHistType = idType;
+
+    this.http.get<any>(itmHistUrl(idType, id))
+      .pipe(
+        map(res => {
+          console.log(res);
+          return res
+        }), 
+        finalize(() => this.running = false)
+      )
+      .subscribe({
+        next: resp => this.histRecord = resp,
+        error: e => this.alert.error(e.message)
+      });
   }
 
   private tryParseJson(value: any) {
