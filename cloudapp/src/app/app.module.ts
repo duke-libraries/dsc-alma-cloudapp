@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MainComponent } from './main/main.component';
 import { IntegrationLogsComponent } from './integration-logs/integration-logs.component';
 import { ItemHistoryComponent } from './item-history/item-history.component';
+import { LoanHistoryComponent } from './loan-history/loan-history.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { TopmenuComponent } from './topmenu/topmenu.component';
 import Material from '@primeng/themes/material';
@@ -28,6 +29,7 @@ import { DrawerModule } from 'primeng/drawer';
     ConfigurationComponent,
     TopmenuComponent,
     ItemHistoryComponent,
+    LoanHistoryComponent,
   ],
   imports: [
     MaterialModule,

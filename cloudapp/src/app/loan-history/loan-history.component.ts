@@ -5,11 +5,11 @@ import { map, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-item-history',
-  templateUrl: './item-history.component.html',
-  styleUrls: ['./item-history.component.scss']
+  selector: 'app-loan-history',
+  templateUrl: './loan-history.component.html',
+  styleUrls: ['./loan-history.component.scss']
 })
-export class ItemHistoryComponent implements OnInit {
+export class LoanHistoryComponent implements OnInit {
   running = false;
   record: any;
   apiUrl!: string;
@@ -24,7 +24,7 @@ export class ItemHistoryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.appService.setTitle('Aleph Item History');
+    this.appService.setTitle('Aleph Loan History');
     this.load();
   }
 
@@ -36,7 +36,7 @@ export class ItemHistoryComponent implements OnInit {
 
   // type barcode => bc, itemId => id
   searchHistory(idType: string, id: string) {
-    const itmHistUrl = (idType: string, id: string) => `${this.apiUrl}/item-history/${idType}/${id}`;
+    const itmHistUrl = (idType: string, id: string) => `${this.apiUrl}/loan-history/${idType}/${id}`;
     this.running = true;
     this.histRecord = null;
     this.searchHistType = idType;
@@ -46,8 +46,8 @@ export class ItemHistoryComponent implements OnInit {
         map(res => {
           // console.log(res);
           res.sort((a, b) => {
-              const iA = a.histDateTime.toUpperCase();
-              const iB = b.histDateTime.toUpperCase();
+              const iA = a.loanDate;
+              const iB = b.loanDate;
               if (iA < iB) {
                 return 1;
               }

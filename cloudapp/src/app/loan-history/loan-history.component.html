@@ -1,0 +1,34 @@
+<app-topmenu>
+    <div buttons>
+        <!-- <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button> -->
+    </div>
+</app-topmenu>
+<div class="loading-shade" *ngIf="running">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+</div>
+<section class="settings-section">
+    <form>
+        <mat-form-field>
+            <input matInput placeholder="Enter Barcode" #barcode>
+        </mat-form-field>
+    </form>
+    <div class="cloudapp-actions">
+        <button mat-flat-button type="button" color="primary" (click)="searchHistory('bc', barcode.value)">Get Loan History</button>
+    </div> 
+</section>
+<div *ngIf="histRecord;">
+    <mat-card *ngFor="let item of histRecord">
+        <mat-card-header>
+            <mat-card-title>{{item.loanDate}}</mat-card-title>
+            <mat-card-subtitle *ngIf="searchHistType === 'id'">{{item.barcode}}</mat-card-subtitle>
+            <mat-card-subtitle>Patron status: {{item.borStatus}}</mat-card-subtitle>
+            <mat-card-subtitle>Patron type: {{item.borType}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p-button (click)="op.toggle($event)" label="Details" />
+          <p-popover #op>
+            <pre>{{item | json}}</pre>
+          </p-popover>
+        </mat-card-content>
+    </mat-card>
+</div>

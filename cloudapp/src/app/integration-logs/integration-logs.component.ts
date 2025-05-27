@@ -3,6 +3,7 @@ import { AppService } from '../app.service';
 import {CloudAppConfigService, AlertService} from '@exlibris/exl-cloudapp-angular-lib';
 import { map, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-integration-logs',
@@ -34,15 +35,19 @@ export class IntegrationLogsComponent implements OnInit {
   }
 
   search(logType: string) {
-    const crsUrl = (logType: string) => `${this.apiUrl}/alma-integrations-logging/${logType}/logs`;
+    const crsUrl = (logType: string) => `${this.apiUrl}/alma-integrations-logging/${logType}`;
     this.running = true;
     this.record = null;
 
     this.http.get<any>(crsUrl(logType))
       .pipe(
         map(res => {
-          // console.log(res);
-          return res
+          console.log(res);
+          return res.map((item: any) => ({
+            timestamp: item.timestamp,
+            message: item.message,
+            data: this.base64ToJson(item.data)
+          }));
         }), 
         finalize(() => this.running = false)
       )
@@ -52,4 +57,8 @@ export class IntegrationLogsComponent implements OnInit {
       });
   }
   
+  base64ToJson(base64String) {
+    const json = Buffer.from(base64String, "base64").toString();
+    return JSON.parse(json);
+  }
 }

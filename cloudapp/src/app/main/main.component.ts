@@ -24,7 +24,8 @@ export class MainComponent implements OnInit, OnDestroy {
   histRecord: any;
   apiUrl!: string;
   running = false;
-  searchHistType: string;
+  searchIdType: string;
+  searchDataType: string;
 
   entities$: Observable<Entity[]> = this.eventsService.entities$
   .pipe(tap(() => this.clear()))
@@ -45,7 +46,6 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    console.log('load');
     this.configService.get().subscribe( config => {
       this.apiUrl = config.apiUrl;
     });
@@ -56,7 +56,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   entitySelected(event: MatRadioChange) {
     const value = event.value as Entity;
-    console.log(value);
+    // console.log(value);
     this.loading = true;
     if (value.type === 'ITEM') {
       const barcode = value.description;
@@ -66,7 +66,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.http.get<any>(itmHistUrl(barcode))
         .pipe(
           map(res => {
-            console.log(res);
+            // console.log(res);
             return res
           }), 
           finalize(() => this.loading = false)
@@ -118,16 +118,46 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   // type barcode => bc, itemId => id
-  searchHistory(idType: string, id: string) {
-    const itmHistUrl = (idType: string, id: string) => `${this.apiUrl}/item-history/${idType}/${id}`;
+  searchHistory(dataType: string, idType: string, id: string) {
+    let histUrl = (idType: string, id: string) => `${this.apiUrl}/item-history/${idType}/${id}`;
+    if (dataType === 'loan') {
+      histUrl = (idType: string, id: string) => `${this.apiUrl}/loan-history/${idType}/${id}`;
+    }
     this.running = true;
     this.histRecord = null;
-    this.searchHistType = idType;
+    this.searchIdType = idType;
+    this.searchDataType = dataType;
 
-    this.http.get<any>(itmHistUrl(idType, id))
+    this.http.get<any>(histUrl(idType, id))
       .pipe(
         map(res => {
-          console.log(res);
+          if (dataType === 'item') {
+            res.sort((a, b) => {
+              const iA = a.histDateTime.toUpperCase();
+              const iB = b.histDateTime.toUpperCase();
+              if (iA < iB) {
+                return 1;
+              }
+              if (iA > iB) {
+                return -1;
+              }
+              return 0;
+            });
+          }
+          if (dataType === 'loan') {
+            res.sort((a, b) => {
+              const iA = a.loanDate;
+              const iB = b.loanDate;
+              if (iA < iB) {
+                return 1;
+              }
+              if (iA > iB) {
+                return -1;
+              }
+              return 0;
+            });
+          }
+          // console.log(res);
           return res
         }), 
         finalize(() => this.running = false)

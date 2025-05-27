@@ -1,7 +1,7 @@
 {
    "id": "duke-dsc",
-   "title": "Duke DSC",
-   "subtitle": "Data Service Center",
+   "title": "Duke Data Service Center",
+   "subtitle": "Duke University Libraries access to Data Service Center",
    "author": "Jeff Fleming",
    "icon": {
       "type": "font",
@@ -12,7 +12,7 @@
    },
    "contentSecurity": {
       "connectSrc": [
-         "https://w4fu917y63.execute-api.us-east-1.amazonaws.com"
+         "https://fd5o81hlvf.execute-api.us-east-1.amazonaws.com"
       ]
    }
 }

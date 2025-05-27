@@ -40,14 +40,17 @@
     <div *ngIf="selectedEntity; else unSelEntBlock">
       <div *ngIf="selectedEntity.type === 'ITEM'; else notItmBlock">
         <div *ngIf="histRecord; else histBtnBlock">
-          <div *ngIf="searchHistType === 'bc'">
-            <button mat-flat-button type="button" color="primary" (click)="searchHistory('id', histRecord[0].itemId)">Get by item id</button>
+          <div *ngIf="searchIdType === 'bc' && searchDataType === 'item'">
+            <button mat-flat-button type="button" color="primary" (click)="searchHistory('item', 'id', histRecord[0].itemId)">Get by item id</button>
           </div>
           <mat-card *ngFor="let item of histRecord">
             <mat-card-header>
-                <mat-card-title>{{item.histReasonType}}: {{item.histReason}}</mat-card-title>
-                <mat-card-subtitle *ngIf="searchHistType === 'id'">{{item.barcode}}</mat-card-subtitle>
-                <mat-card-subtitle>{{item.histDateTime}}</mat-card-subtitle>
+                <mat-card-title *ngIf="searchDataType === 'item'">{{item.histReasonType}}: {{item.histReason}}</mat-card-title>
+                <mat-card-title *ngIf="searchDataType === 'loan'">{{item.loanDate}}</mat-card-title>
+                <mat-card-subtitle *ngIf="searchIdType === 'id'">{{item.barcode}}</mat-card-subtitle>
+                <mat-card-subtitle *ngIf="searchDataType === 'item'">{{item.histDateTime}}</mat-card-subtitle>
+                <mat-card-subtitle *ngIf="searchDataType === 'loan'">Patron status: {{item.borStatus}}</mat-card-subtitle>
+                <mat-card-subtitle *ngIf="searchDataType === 'loan'">Patron type: {{item.borType}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <p-button (click)="op.toggle($event)" label="Details" />
@@ -58,7 +61,8 @@
           </mat-card>
         </div>
         <ng-template #histBtnBlock>
-          <button mat-flat-button type="button" color="primary" (click)="searchHistory('bc', selectedEntity.description)">Get Item History</button>
+          <button mat-flat-button type="button" color="primary" (click)="searchHistory('item', 'bc', selectedEntity.description)">Get Item History</button>
+          <button mat-flat-button type="button" color="primary" (click)="searchHistory('loan', 'bc', selectedEntity.description)">Get Loan History</button>
         </ng-template>
       </div>
       <ng-template #notItmBlock>

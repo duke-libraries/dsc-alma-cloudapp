@@ -27,6 +27,8 @@
     <mat-card-content>
         <p *ngIf="item.data.reqtype === 'title'">User {{item.data.user_id}} made a title request for {{item.data.mmsid}}.</p>
         <p *ngIf="item.data.reqtype === 'item'">User {{item.data.user_id}} made a item request for {{item.data.item_id}}.</p>
-        <!-- <pre>{{item | json}}</pre> -->
+        <p *ngIf="item.data.errType === 'patron'">User {{item.data.user_id}} was not found.</p>
+        <p *ngIf="item.data.errType === 'bib'">Bib {{item.data.mmsid}} was not found.</p>
+        <pre *ngIf="item.data.reqtype === undefined && item.data.errType === undefined">{{item.data | json}}</pre>
     </mat-card-content>
 </mat-card>
