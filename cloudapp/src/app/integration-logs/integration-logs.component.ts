@@ -31,10 +31,16 @@ export class IntegrationLogsComponent implements OnInit {
     console.log('load');
     this.configService.get().subscribe( config => {
       this.apiUrl = config.apiUrl;
+      if (this.apiUrl === undefined) {
+        this.alert.error('Please add DSC api url to settings.');
+      }
     });
   }
 
   search(logType: string) {
+    if (logType === undefined) {
+      logType = 'CRS';
+    }
     const crsUrl = (logType: string) => `${this.apiUrl}/alma-integrations-logging/${logType}`;
     this.running = true;
     this.record = null;

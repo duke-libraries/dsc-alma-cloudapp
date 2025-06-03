@@ -48,6 +48,9 @@ export class MainComponent implements OnInit, OnDestroy {
   load() {
     this.configService.get().subscribe( config => {
       this.apiUrl = config.apiUrl;
+      if (this.apiUrl === undefined) {
+        this.alert.error('Please add DSC api url to settings.');
+      }
     });
   }
 
@@ -57,32 +60,36 @@ export class MainComponent implements OnInit, OnDestroy {
   entitySelected(event: MatRadioChange) {
     const value = event.value as Entity;
     // console.log(value);
-    this.loading = true;
-    if (value.type === 'ITEM') {
-      const barcode = value.description;
-      const itmHistUrl = (barcode: string) => `${this.apiUrl}/item-history/${barcode}`;
-      this.histRecord = null;
-
-      this.http.get<any>(itmHistUrl(barcode))
-        .pipe(
-          map(res => {
-            // console.log(res);
-            return res
-          }), 
-          finalize(() => this.loading = false)
-        )
-      //   .subscribe({
-      //     next: resp => this.record = resp,
-      //     error: e => this.alert.error(e.message)
-      //   });
-      this.loading=false;   
+    if (this.apiUrl === undefined) {
+        this.alert.error('Please add DSC api url to settings.');
     } else {
-      this.restService.call<any>(value.link)
-      .pipe(finalize(()=>this.loading=false))
-      .subscribe(
-        result => this.apiResult = result,
-        error => this.alert.error('Failed to retrieve entity: ' + error.message)
-      );
+      this.loading = true;
+      if (value.type === 'ITEM') {
+        const barcode = value.description;
+        const itmHistUrl = (barcode: string) => `${this.apiUrl}/item-history/${barcode}`;
+        this.histRecord = null;
+
+        this.http.get<any>(itmHistUrl(barcode))
+          .pipe(
+            map(res => {
+              // console.log(res);
+              return res
+            }), 
+            finalize(() => this.loading = false)
+          )
+        //   .subscribe({
+        //     next: resp => this.record = resp,
+        //     error: e => this.alert.error(e.message)
+        //   });
+        this.loading=false;   
+      } else {
+        this.restService.call<any>(value.link)
+        .pipe(finalize(()=>this.loading=false))
+        .subscribe(
+          result => this.apiResult = result,
+          error => this.alert.error('Failed to retrieve entity: ' + error.message)
+        );
+      }
     }
   }
 

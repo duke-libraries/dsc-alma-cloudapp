@@ -31,6 +31,9 @@ export class ItemHistoryComponent implements OnInit {
   load() {
     this.configService.get().subscribe( config => {
       this.apiUrl = config.apiUrl;
+      if (this.apiUrl === undefined) {
+        this.alert.error('Please add DSC api url to settings.');
+      }
     });
   }
 
